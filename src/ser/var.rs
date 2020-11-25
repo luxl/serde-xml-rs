@@ -91,6 +91,12 @@ where
         key: &'static str,
         value: &T,
     ) -> Result<()> {
+        // add by allen to handle nested struct problem
+        if key == "$value" {
+            value.serialize(&mut *self.parent)?;
+            return Ok(())
+        }
+        
         write!(self.parent.writer, "<{}>", key)?;
         value.serialize(&mut *self.parent)?;
         write!(self.parent.writer, "</{}>", key)?;
